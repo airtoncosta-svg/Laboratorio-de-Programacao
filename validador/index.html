@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validador de CPF</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background-color: #f2f4f8;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 420px;
+      padding: 32px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      color: #222;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color: #2764c5;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1f4f9c;
+    }
+
+    #resultado {
+      min-height: 24px;
+      margin-top: 18px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .valido {
+      color: #18753c;
+    }
+
+    .invalido {
+      color: #b42318;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Validador de CPF</h1>
+
+    <p>Digite um CPF para verificar se ele é válido.</p>
+
+    <form id="formulario">
+      <label for="cpf">CPF</label>
+
+      <input
+        type="text"
+        id="cpf"
+        name="cpf"
+        placeholder="000.000.000-00"
+        maxlength="14"
+        autocomplete="off"
+      >
+
+      <button type="submit">Validar CPF</button>
+    </form>
+
+    <div id="resultado" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const formulario = document.getElementById("formulario");
+    const campoCpf = document.getElementById("cpf");
+    const resultado = document.getElementById("resultado");
+
+    campoCpf.addEventListener("input", function () {
+      let cpf = campoCpf.value.replace(/\D/g, "");
+
+      cpf = cpf.slice(0, 11);
+
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+      campoCpf.value = cpf;
+    });
+
+    formulario.addEventListener("submit", function (evento) {
+      evento.preventDefault();
+
+      const cpf = campoCpf.value.replace(/\D/g, "");
+
+      if (validarCpf(cpf)) {
+        resultado.textContent = "CPF válido.";
+        resultado.className = "valido";
+      } else {
+        resultado.textContent = "CPF inválido.";
+        resultado.className = "invalido";
+      }
+    });
+
+    function validarCpf(cpf) {
+      if (cpf.length !== 11) {
+        return false;
+      }
+
+      if (/^(\d)\1{10}$/.test(cpf)) {
+        return false;
+      }
+
+      let soma = 0;
+
+      for (let i = 0; i < 9; i++) {
+        soma += Number(cpf[i]) * (10 - i);
+      }
+
+      let primeiroDigito = (soma * 10) % 11;
+
+      if (primeiroDigito === 10) {
+        primeiroDigito = 0;
+      }
+
+      if (primeiroDigito !== Number(cpf[9])) {
+        return false;
+      }
+
+      soma = 0;
+
+      for (let i = 0; i < 10; i++) {
+        soma += Number(cpf[i]) * (11 - i);
+      }
+
+      let segundoDigito = (soma * 10) % 11;
+
+      if (segundoDigito === 10) {
+        segundoDigito = 0;
+      }
+
+      return segundoDigito === Number(cpf[10]);
+    }
+  </script>
+</body>
+</html>
