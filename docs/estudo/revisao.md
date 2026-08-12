@@ -22,8 +22,6 @@ Não encontrei um repositório Git nesta pasta (nem histórico, nem origin/main)
 Não há package.json no ambiente, e não encontrei tidy ou outro validador de HTML instalado. Por isso, extraí a lógica JS (máscara de input e algoritmo de validação de CPF) e rodei-a com node contra casos de teste conhecidos, para confirmar que o comportamento realmente funciona (não apenas por leitura).
 
 **MARKDOWN CLAUDE**
-## Revisão automática
-
 ### 🔴 Quebra o programa
 Nenhum problema encontrado aqui. A máscara de digitação (`index.html:120-130`) e o algoritmo de validação de CPF (`index.html:158-193`) foram executados com Node.js contra casos de teste (CPFs válidos conhecidos, CPFs com dígitos repetidos, CPFs com dígito verificador incorreto e entradas de tamanho inválido) e todos os resultados bateram com o esperado.
 
